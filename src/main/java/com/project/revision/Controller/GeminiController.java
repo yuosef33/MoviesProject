@@ -2,13 +2,10 @@ package com.project.revision.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.revision.Service.Impl.GeminiService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,5 +23,10 @@ public class GeminiController {
         String prompt = body.get("question");
         String answer = geminiService.askGemini(prompt);
         return ResponseEntity.ok(Map.of("response", answer));
+    }
+    @DeleteMapping("/endChat")
+    public ResponseEntity<String> DeleteChat(){
+        geminiService.deleteCurrentUserChat();
+        return ResponseEntity.status(HttpStatus.FOUND).body("Deleted");
     }
 }

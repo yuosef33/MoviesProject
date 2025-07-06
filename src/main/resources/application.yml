@@ -32,3 +32,7 @@ management-token:
   secret: movieproject@10238321232131#@3321@#@#!@$#!2
   duration: 1d
 
+#gemini:
+#  api:
+#    key: AIzaSyCpJ6MqROKrfY8dAWJx0vSvwHQRVwGp-CM
+

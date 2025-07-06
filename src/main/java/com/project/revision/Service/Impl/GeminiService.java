@@ -4,18 +4,12 @@ package com.project.revision.Service.Impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.revision.model.Client;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
-
-import java.util.List;
 import java.util.Map;
+
 @Service
 public class GeminiService {
-
     private final String API_KEY="AIzaSyCpJ6MqROKrfY8dAWJx0vSvwHQRVwGp-CM";
     private final String ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
     private final WebClient webClient;
@@ -31,10 +25,9 @@ public class GeminiService {
 
     public String askGemini(String userMessage) throws JsonProcessingException {
 
-      //  List<String> chatHistory=redisService.getChatHistory(clientService.getCurrentClient().getUserEmail());
-
-            String prompt=aiSetup+" this is the previous messages context:"
-                    +redisService.getChatHistory(clientService.getCurrentClient().getUserEmail())
+            String prompt=aiSetup
+                    +" this is the previous messages context:"
+                   +redisService.getChatHistory(clientService.getCurrentClient().getUserEmail())
                     +"now answer this question :"+userMessage;
 
         // Constructing request body
@@ -49,7 +42,7 @@ public class GeminiService {
                             .retrieve()
                             .bodyToMono(String.class).block();
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response); // jsonString هو الـ string اللي عندك
+        JsonNode root = mapper.readTree(response);
 
         String answer = root
                 .path("candidates").get(0)
@@ -58,9 +51,12 @@ public class GeminiService {
                 .path("text")
                 .asText().trim();
 
-        String message="question:"+userMessage+"\n"+"answer:"+answer;
         redisService.saveChat(clientService.getCurrentClient().getUserEmail(),userMessage,answer);
 
             return answer;
+    }
+
+    public void deleteCurrentUserChat(){
+        redisService.delete("chat:"+clientService.getCurrentClient().getUserEmail());
     }
 }

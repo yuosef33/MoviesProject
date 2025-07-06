@@ -38,6 +38,9 @@ public class SpringConfig {
                 .requestMatchers(HttpMethod.POST, "/Redis/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.DELETE, "/Redis/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.POST, "/ai/**").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.POST, "/v2/**","/v3/api-docs/**","/v3/api-docs","/swagger-ui.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v2/**","/v3/api-docs/**","/v3/api-docs","/swagger-ui.html","/swagger-ui/**").permitAll()
+
         );
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
