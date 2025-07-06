@@ -16,4 +16,5 @@ public interface ClientService {
     ClientDto createClient(ClientAccInfo clientAccInfo) throws SystemException;
     List<Map<String ,String>> createUniqeClient(ClientAccInfo clientAccInfo) throws SystemException;
     ClientDto verifyAccount(String code,String email) throws SystemException;
+    Client getCurrentClient();
 }

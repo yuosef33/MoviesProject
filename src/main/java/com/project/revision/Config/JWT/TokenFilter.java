@@ -36,7 +36,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getServletPath().contains("login") || request.getServletPath().contains("signup")|| request.getServletPath().contains("User")  || request.getServletPath().contains("Redis")){
+        if (request.getServletPath().contains("login") || request.getServletPath().contains("signup")|| request.getServletPath().contains("User")  ){
             return true;
         }
         return false;

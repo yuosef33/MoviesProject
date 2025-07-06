@@ -33,10 +33,11 @@ public class SpringConfig {
         http.authorizeHttpRequests(api -> api
                 .requestMatchers(HttpMethod.GET, "/Movie/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.GET, "/User/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/Redis/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/Redis/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.POST, "/User/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/Redis/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/Redis/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/Redis/**").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.DELETE, "/Redis/**").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.POST, "/ai/**").hasRole("NORMALUSER")
         );
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

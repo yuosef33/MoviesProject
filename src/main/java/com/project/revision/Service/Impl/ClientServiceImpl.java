@@ -11,6 +11,8 @@ import com.project.revision.model.Auth;
 import com.project.revision.model.Client;
 import com.project.revision.sitting.CodeGenrator;
 import jakarta.transaction.SystemException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -144,6 +146,12 @@ public class ClientServiceImpl implements ClientService {
             return clientDto;
         }
         throw new SystemException("Worng Code");
+    }
+
+    @Override
+    public Client getCurrentClient() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Client) authentication.getPrincipal();
     }
 
 

@@ -31,3 +31,4 @@ spring:
 management-token:
   secret: movieproject@10238321232131#@3321@#@#!@$#!2
   duration: 1d
+
