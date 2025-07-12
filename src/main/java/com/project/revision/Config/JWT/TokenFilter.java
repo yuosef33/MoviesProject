@@ -31,7 +31,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getServletPath().contains("login") || request.getServletPath().contains("signup")|| request.getServletPath().contains("User")|| request.getServletPath().contains("v3") || request.getServletPath().contains("swagger-ui") ){
+        if (request.getServletPath().contains("login") || request.getServletPath().contains("signup")|| request.getServletPath().contains("v3") || request.getServletPath().contains("swagger-ui")  || request.getServletPath().contains("OAuth2")){
             return true;
         }
         return false;

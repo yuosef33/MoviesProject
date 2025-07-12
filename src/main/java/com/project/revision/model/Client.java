@@ -17,6 +17,9 @@ public class Client {
     private String userPassword;
 
     private String userPhoneNumber;
+
+    private String userPhoto ;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name ="user_roles",
@@ -35,6 +38,24 @@ public class Client {
         this.userPassword = userPassword;
         this.userPhoneNumber = userPhoneNumber;
         this.auths = auths;
+    }
+
+    public Client(Long id, String userName, String userEmail, String userPassword, String userPhoneNumber, String userPhoto, List<Auth> auths) {
+        this.id = id;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.userPhoneNumber = userPhoneNumber;
+        this.userPhoto = userPhoto;
+        this.auths = auths;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 
     public Long getId() {

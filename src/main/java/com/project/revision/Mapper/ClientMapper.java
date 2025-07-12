@@ -21,6 +21,7 @@ public class ClientMapper {
             dto.setUser_email(client.getUserEmail());
             dto.setUser_password(client.getUserPassword());
             dto.setUser_phoneNumber(client.getUserPhoneNumber());
+            dto.setUserPhoto(client.getUserPhoto());
          for(Auth auth: client.getAuths()){
              auth.setUsers(null);
              auths.add(auth);
@@ -41,6 +42,7 @@ public class ClientMapper {
             client.setUserPassword(dto.getUser_password());
             client.setUserPhoneNumber(dto.getUser_phoneNumber());
             client.setAuths(dto.getAuths());
+            client.setUserPhoto(dto.getUserPhoto());
 
             return client;
         }

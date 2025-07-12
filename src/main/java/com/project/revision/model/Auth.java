@@ -23,6 +23,9 @@ public class Auth {
         User_Role = user_Role;
         this.clients = clients;
     }
+    public Auth(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

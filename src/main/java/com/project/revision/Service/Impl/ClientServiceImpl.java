@@ -1,10 +1,10 @@
 package com.project.revision.Service.Impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.project.revision.Config.JWT.TokenHandler;
 import com.project.revision.Dao.ClientDao;
-import com.project.revision.Dto.ClientAccInfo;
-import com.project.revision.Dto.ClientDto;
-import com.project.revision.Dto.LoginInfo;
+import com.project.revision.Dto.*;
 import com.project.revision.Mapper.ClientMapper;
 import com.project.revision.Service.ClientService;
 import com.project.revision.model.Auth;
@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -26,13 +28,15 @@ public class ClientServiceImpl implements ClientService {
     private final PasswordEncoder passwordEncoder;
     private final RedisServiceImpl redisService;
     private final EmailServiceImpl emailService;
+    private final Cloudinary cloudinary;
 
-    public ClientServiceImpl(ClientDao clientDao, TokenHandler tokenHandler, PasswordEncoder passwordEncoder, RedisServiceImpl redisService, EmailServiceImpl emailService) {
+    public ClientServiceImpl(ClientDao clientDao, TokenHandler tokenHandler, PasswordEncoder passwordEncoder, RedisServiceImpl redisService, EmailServiceImpl emailService, Cloudinary cloudinary) {
         this.clientDao = clientDao;
         this.tokenHandler = tokenHandler;
         this.passwordEncoder = passwordEncoder;
         this.redisService = redisService;
         this.emailService = emailService;
+        this.cloudinary = cloudinary;
     }
 
 
@@ -82,7 +86,10 @@ public class ClientServiceImpl implements ClientService {
         ClientDto clientDto=new ClientDto(clientAccInfo.getUser_name(),
                                             clientAccInfo.getUser_email(),
                                                    passwordEncoder.encode(clientAccInfo.getUser_password()),
-                                                    clientAccInfo.getUser_phoneNumber(),auths);
+                                                    clientAccInfo.getUser_phoneNumber()
+                ,null
+                ,auths
+        );
          clientDao.save(ClientMapper.toEntity(clientDto));
         return clientDto;
     }
@@ -131,6 +138,7 @@ public class ClientServiceImpl implements ClientService {
             clientDto.setUser_name(redisService.get("Client:"+vId+"username"));
             clientDto.setUser_password(redisService.get("Client:"+vId+"password"));
             clientDto.setUser_phoneNumber(redisService.get("Client:"+vId+"phone"));
+            clientDto.setUserPhoto(null);
             List<Auth> auths=new ArrayList<>();
             Auth auth= new Auth();
             auth.setId(1L);
@@ -153,6 +161,41 @@ public class ClientServiceImpl implements ClientService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (Client) authentication.getPrincipal();
     }
+    public String uploadImage(MultipartFile file) throws IOException, SystemException {
+        if(file.getSize() >10*1024*1024){
+            throw new SystemException("File too large");
+        }
+        else if(file.getContentType()==null || !file.getContentType().startsWith("image/"))
+            throw new SystemException("Only images allowed");
+        
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        Client client=getCurrentClient();
+        client.setUserPhoto(uploadResult.get("secure_url").toString());
+        clientDao.save(client);
+        return uploadResult.get("secure_url").toString();
+    }
 
+    @Override
+    public ClientDataUpdate updateUserData(ClientDataUpdate clientDto)  {
+        Client client= getCurrentClient();
+      client.setUserName(clientDto.getUsername());
+      client.setUserPhoneNumber(clientDto.getPhoneNumber());
+        clientDao.save(client);
+        return clientDto;
+    }
+
+    @Override
+    public Map<String,String> updateUserPassword(PasswordUpdate passwordUpdate) throws SystemException {
+      //  Client client =getCurrentClient();
+        Client clientRealtime= getCurrentClient();
+        if(!passwordEncoder.matches(passwordUpdate.getCurrentPassword(),clientRealtime.getUserPassword())){
+            throw new SystemException("wrong password");
+        }
+        clientRealtime.setUserPassword(passwordEncoder.encode(passwordUpdate.getUpdatedPassword()));
+        clientDao.save(clientRealtime);
+        Map<String,String> response=new HashMap<>();
+        response.put("response","Password successfully updated");
+        return response;
+    }
 
 }

@@ -16,6 +16,9 @@ public class ClientDto {
 
     private String user_phoneNumber;
 
+    private String userPhoto ;
+
+
     private List<Auth> auths;
 
     public ClientDto() {
@@ -27,7 +30,9 @@ public class ClientDto {
         this.user_email = user_email;
         this.user_password = user_password;
         this.user_phoneNumber = user_phoneNumber;
+
         this.auths = auths;
+
     }
     public ClientDto( String user_name, String user_email, String user_password, String user_phoneNumber, List<Auth> auths) {
         this.user_name = user_name;
@@ -35,6 +40,23 @@ public class ClientDto {
         this.user_password = user_password;
         this.user_phoneNumber = user_phoneNumber;
         this.auths = auths;
+    }
+
+    public ClientDto( String user_name, String user_email, String user_password, String user_phoneNumber, String userPhoto, List<Auth> auths) {
+        this.user_name = user_name;
+        this.user_email = user_email;
+        this.user_password = user_password;
+        this.user_phoneNumber = user_phoneNumber;
+        this.userPhoto = userPhoto;
+        this.auths = auths;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 
     public Long getId() {

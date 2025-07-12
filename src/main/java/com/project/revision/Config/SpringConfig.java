@@ -30,25 +30,36 @@ public class SpringConfig {
         http.csrf(csrf -> csrf.disable());
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.securityMatcher("/**").cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         http.authorizeHttpRequests(api -> api
                 .requestMatchers(HttpMethod.GET, "/Movie/**").hasRole("NORMALUSER")
-                .requestMatchers(HttpMethod.GET, "/User/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/Redis/**").hasRole("NORMALUSER")
-                .requestMatchers(HttpMethod.POST, "/User/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/Redis/**").hasRole("NORMALUSER")
-                .requestMatchers(HttpMethod.DELETE, "/Redis/**").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.GET, "/Redis/**").hasRole("DEVELPOER")
+                .requestMatchers(HttpMethod.POST, "/Redis/**").hasRole("DEVELPOER")
+                .requestMatchers(HttpMethod.DELETE, "/Redis/**").hasRole("DEVELPOER")
+                .requestMatchers(HttpMethod.GET, "/User/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/User/signup").permitAll()
+                .requestMatchers(HttpMethod.POST, "/User/signup2").permitAll()
+                .requestMatchers(HttpMethod.POST, "/User/verify").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/User/update/data").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.PUT, "/User/update/password").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.GET, "/User/data").hasAnyRole("NORMALUSER","DEVELPOER")
+                .requestMatchers(HttpMethod.POST, "/OAuth2/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/User/addImage/Upload").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.DELETE, "/ai/**").hasRole("NORMALUSER")
+                .requestMatchers(HttpMethod.GET, "/TMDBAPI/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.POST, "/ai/**").hasRole("NORMALUSER")
                 .requestMatchers(HttpMethod.POST, "/v2/**","/v3/api-docs/**","/v3/api-docs","/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v2/**","/v3/api-docs/**","/v3/api-docs","/swagger-ui.html","/swagger-ui/**").permitAll()
 
         );
+
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration= new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
 

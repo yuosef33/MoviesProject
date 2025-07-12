@@ -14,6 +14,8 @@ public class ClientAccInfo {
     @NotBlank
     private String user_phoneNumber;
 
+
+
     public ClientAccInfo() {
     }
 
@@ -23,6 +25,8 @@ public class ClientAccInfo {
         this.user_password = user_password;
         this.user_phoneNumber = user_phoneNumber;
     }
+
+
 
     public @NotBlank String getUser_name() {
         return user_name;
