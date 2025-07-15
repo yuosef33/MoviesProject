@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface ClientService {
     ClientDto findbyuseremail(String username) throws SystemException;
-    String login(LoginInfo loginInfo) throws SystemException;
+    String login(LoginInfo loginInfo);
     Client getClientFromToken(String token) ;
     ClientDto createClient(ClientAccInfo clientAccInfo) throws SystemException;
     List<Map<String ,String>> createUniqeClient(ClientAccInfo clientAccInfo) throws SystemException;
@@ -20,5 +20,7 @@ public interface ClientService {
     String uploadImage(MultipartFile file) throws IOException, SystemException;
     ClientDataUpdate updateUserData(ClientDataUpdate clientDto) ;
     Map<String,String> updateUserPassword(PasswordUpdate passwordUpdate) throws SystemException;
-
+    Map<String,String> forgetPassword(String useremail);
+    Map<String, String> verifyForgetPasswordCode(String code,String key);
+    Map<String, String> updateUserPasswordFromForget(String userEmail,String Password,String Key) throws SystemException;
 }

@@ -38,6 +38,9 @@ public class RedisServiceImpl {
         redisTemplate.opsForList().rightPush(key,QA);
         redisTemplate.expire(key, Duration.ofHours(5));
     }
+    public void updateTime(String key,long seconds){
+        stringRedisTemplate.expire(key,Duration.ofSeconds(seconds));
+    }
 
     public List<Map<String,String>> getChatHistory(String userEmail) {
         return redisTemplate.opsForList().range("chat:" +userEmail, 0, -1);

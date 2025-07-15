@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> getGenre(@RequestBody LoginInfo loginInfo) throws SystemException {
+    public ResponseEntity<String> getGenre(@RequestBody LoginInfo loginInfo)  {
         return ResponseEntity.ok(clientService.login(loginInfo));
     }
 
@@ -39,8 +39,8 @@ public class UserController {
         return ResponseEntity.ok(clientService.createUniqeClient(clientAccInfo));
     }
     @PostMapping("/verify")
-    public ResponseEntity<ClientDto> creatRealAccount(@RequestParam String code,@RequestParam String id)throws SystemException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.verifyAccount(code,id));
+    public ResponseEntity<ClientDto> creatRealAccount(@RequestBody VerifyData data )throws SystemException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.verifyAccount(data.code(),data.key()));
     }
 
     @PostMapping("/addImage/Upload")
@@ -60,6 +60,18 @@ public class UserController {
     @PutMapping("/update/password")
     public ResponseEntity<Map<String,String>> updatePassword(@RequestBody PasswordUpdate passwordUpdate) throws SystemException {
         return ResponseEntity.ok(clientService.updateUserPassword(passwordUpdate));
+    }
+    @GetMapping("/forget_password")
+    public ResponseEntity<Map<String,String>> forgetPassword(@RequestParam String userEmail) {
+        return ResponseEntity.ok(clientService.forgetPassword(userEmail));
+    }
+    @GetMapping("/verify/ForgetPassword")
+    public ResponseEntity<Map<String,String>> verifyForgetPasswordCode(@RequestBody VerifyData data) {
+        return ResponseEntity.ok(clientService.verifyForgetPasswordCode(data.code(),data.key()));
+    }
+    @PutMapping("/ForgetPassword/newPassword")
+    public ResponseEntity<Map<String,String>> newPasswordForget(@RequestBody ForgetPasswordNewData data) throws SystemException {
+        return ResponseEntity.ok(clientService.updateUserPasswordFromForget(data.email(),data.password(),data.Key()));
     }
 
 

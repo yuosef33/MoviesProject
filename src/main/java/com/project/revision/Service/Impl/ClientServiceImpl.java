@@ -11,11 +11,13 @@ import com.project.revision.model.Auth;
 import com.project.revision.model.Client;
 import com.project.revision.sitting.CodeGenrator;
 import jakarta.transaction.SystemException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
@@ -50,12 +52,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
-    public String login(LoginInfo loginInfo) throws SystemException {
+    public String login(LoginInfo loginInfo) {
         Client client=clientDao.findClientByUserEmail(loginInfo.getEmail());
         if(client ==null)
-            throw new SystemException("no user with that name");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"invalid password");
         if(!passwordEncoder.matches(loginInfo.getPassword(),client.getUserPassword()))
-            throw new SystemException("invalid password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"invalid password");
 
         return tokenHandler.creatToken(ClientMapper.toEntity(ClientMapper.toDto(client)));
 
@@ -115,7 +117,7 @@ public class ClientServiceImpl implements ClientService {
         redisService.save("Client:"+verificationId+"username",clientDto.getUser_name(),600);
         redisService.save("Client:"+verificationId+"password",clientDto.getUser_password(),600);
         redisService.save("Client:"+verificationId+"phone",clientDto.getUser_phoneNumber(),600);
-        emailService.sendSimpleMessage(clientDto.getUser_email(),"Email confirmation code from Spring boot",code);
+        emailService.sendSimpleMessage(clientDto.getUser_email(),"Email confirmation code from Spring boot",code);   //email config
         redisService.save("OTP:"+verificationId,code,600);
         Map<String,String> codes1= new HashMap<>();
         Map<String,String> codes2= new HashMap<>();
@@ -197,5 +199,50 @@ public class ClientServiceImpl implements ClientService {
         response.put("response","Password successfully updated");
         return response;
     }
+
+    @Override
+    public Map<String, String> forgetPassword(String userEmail) {
+        Client client= clientDao.findClientByUserEmail(userEmail);
+        if(client==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"there is no account with this email");
+        }
+        String code=CodeGenrator.generateCode();
+        String userid=UUID.randomUUID().toString();
+        redisService.save("ForgetPassword:"+userid,code,300); //forget password stays for 5 minutes
+        emailService.sendSimpleMessage(userEmail,"Forget Password Code",code);
+        Map<String,String> response=new HashMap<>();
+        response.put("message","Verification code sent");
+        response.put("key",userid);
+        return response;
+    }
+    @Override
+    public Map<String, String> verifyForgetPasswordCode(String code,String key){
+        String realCode= redisService.get("ForgetPassword:"+key);
+        if(!realCode.equals(code)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Wrong code");
+        }
+        redisService.delete("ForgetPassword:"+key);
+        String finalKey=UUID.randomUUID().toString();
+        redisService.save("NewPasswordToken:"+finalKey,"ture",3600);
+        Map<String, String> response=new HashMap<>();
+        response.put("message","Verification successful");
+        response.put("resetToken",finalKey);
+        return response;
+    }
+    @Override
+    public Map<String, String> updateUserPasswordFromForget(String userEmail,String Password,String Key) throws SystemException {
+       if (redisService.get("NewPasswordToken:"+Key)==null)
+           throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Wrong Key");
+       Client client= clientDao.findClientByUserEmail(userEmail);
+        if(client==null){
+            throw new SystemException("Wrong userEmail");
+        }
+        client.setUserPassword(passwordEncoder.encode(Password));
+        clientDao.save(client);
+        Map<String, String> response=new HashMap<>();
+        response.put("message","Password changed successfully");
+        return response;
+    }
+
 
 }
