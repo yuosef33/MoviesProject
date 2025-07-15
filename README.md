@@ -1,6 +1,6 @@
 # 🎬 MovieAI - Smart Movie Chat & Recommendation Backend
 
-This is a Spring Boot backend project that combines AI chat functionality with movie recommendations using external APIs such as Gemini and TMDB. It supports authentication (JWT + Google OAuth2), file upload, Redis caching, and role-based access control.
+This is a Spring Boot backend project that combines AI chat functionality with movie recommendations using external APIs such as Gemini and TMDB. It supports authentication (JWT + Google OAuth2), file upload, Redis caching, role-based access control and Spring Boot + Redis + DB inside Docker Compose 🐳 .
 
 ---
 
