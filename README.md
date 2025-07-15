@@ -1,5 +1,41 @@
-its my revision project on spirng boot and security
-this new skills i learned in this project :-
-this an movies app contianrized with docker using mysql and redis every service containrized in container 
-i added feature that when you sign up with gmail spring boot sends OTP code for you gmail and you should got that code and type it to create your account
-i also added Ai feature that you can ask ai for any thing about movie or movie industry just that if you try to ask Ai about anything else he will politely decline
+# 🎬 MovieAI - Smart Movie Chat & Recommendation Backend
+
+This is a Spring Boot backend project that combines AI chat functionality with movie recommendations using external APIs such as Gemini and TMDB. It supports authentication (JWT + Google OAuth2), file upload, Redis caching, and role-based access control.
+
+---
+
+## 🚀 Features
+
+- ✅ **User Authentication:**
+  - Email + Password (JWT)
+  - Google OAuth2 Login
+  - OTP verification and password reset
+
+- 🤖 **AI Movie Chat Assistant:**
+  - Gemini API integration
+  - Stores chat history temporarily in Redis
+  - Context-aware movie suggestions
+
+- 🎞️ **Movie API Integration (TMDB):**
+  - Fetch all movies
+  - Search by name or genre
+  - Get movie by ID
+  - Get all genres
+
+- ☁️ **Redis Usage:**
+  - Store OTPs with TTL
+  - Store chat messages per user with TTL
+  - Store verification flows
+  - Config Redies Template to Store Map
+    
+- 📸 **Upload & Download:**
+  - Upload user image (max 10MB)
+  - Upload image to cloud
+  - Download via link
+
+- 💬 **AI API Communication**
+  - Integrated with Gemini API to generate movie-related responses
+
+- 🔒 **Secure with:**
+  - Spring Security + JWT
+  - Role-based authorization
